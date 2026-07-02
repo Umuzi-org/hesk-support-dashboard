@@ -43,6 +43,8 @@ jobs:
 
       SHEET_ID: ${{ secrets.SHEET_ID }}
 
+      EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
