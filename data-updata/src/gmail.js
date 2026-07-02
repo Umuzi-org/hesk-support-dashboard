@@ -18,16 +18,12 @@ function extractZipUrl(text) {
 
 async function getLatestZipUrl() {
   const gmail = gmailClient;
-
-  console.log(`sender: ${process.env.GMAIL_SENDER}`)
   
   const res = await gmail.users.messages.list({
     userId: "me",
     q: `from:${process.env.GMAIL_SENDER}`,
     maxResults: 1,
   });
-
-  console.log(`res: ${res}`)
 
   const messageId = res.data.messages?.[0]?.id;
   if (!messageId) throw new Error("No email found");
