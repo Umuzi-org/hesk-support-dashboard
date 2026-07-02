@@ -3,6 +3,9 @@ name: HESK Dashboard
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: "15 7 * * 1" # Every monday at 7:15am UTC which is equal to 9:15am SAST
+
 jobs:
   dashboard:
     runs-on: ubuntu-latest
