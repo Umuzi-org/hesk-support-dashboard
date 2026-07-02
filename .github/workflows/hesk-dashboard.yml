@@ -83,4 +83,4 @@ jobs:
             -e "SHOW DATABASES;"
 
       - name: Run dashboard pipeline
-        run: node index.js
+        run: npm run start
