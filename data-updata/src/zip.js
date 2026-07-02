@@ -30,7 +30,6 @@ function extractZip(zipPath) {
       password: process.env.ZIP_PASSWORD,
     });
 
-    stream.on("data", console.log);
     stream.on("end", () => resolve(outputDir));
     stream.on("error", reject);
   });
