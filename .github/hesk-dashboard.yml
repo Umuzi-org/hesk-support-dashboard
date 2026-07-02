@@ -1,0 +1,86 @@
+name: HESK Dashboard
+
+on:
+  workflow_dispatch:
+
+jobs:
+  dashboard:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./data-updata
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: umuzi
+          MYSQL_USER: hesk_user
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: 3306
+      MYSQL_DB: umuzi
+      MYSQL_USER: hesk_user
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+      GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+
+      ZIP_PASSWORD: ${{ secrets.ZIP_PASSWORD }}
+
+      SHEET_ID: ${{ secrets.SHEET_ID }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: data-updata/package-lock.json
+
+      - name: Install MySQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for MySQL
+        run: |
+          until mysqladmin ping \
+            -h127.0.0.1 \
+            -uroot \
+            -proot \
+            --silent
+          do
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+
+      - name: Verify MySQL
+        run: |
+          mysql \
+            -h127.0.0.1 \
+            -uhesk_user \
+            -p${{ secrets.MYSQL_PASSWORD }} \
+            -e "SHOW DATABASES;"
+
+      - name: Run dashboard pipeline
+        run: node index.js
