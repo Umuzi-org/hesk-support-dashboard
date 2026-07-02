@@ -3,6 +3,9 @@ name: HESK Dashboard
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: "15 7 * * 1" # Every monday at 7:15am UTC which is equal to 9:15am SAST
+
 jobs:
   dashboard:
     runs-on: ubuntu-latest
@@ -42,6 +45,8 @@ jobs:
       ZIP_PASSWORD: ${{ secrets.ZIP_PASSWORD }}
 
       SHEET_ID: ${{ secrets.SHEET_ID }}
+
+      GMAIL_SENDER: ${{ secrets.GMAIL_SENDER }}
 
     steps:
       - name: Checkout repository
@@ -83,4 +88,4 @@ jobs:
             -e "SHOW DATABASES;"
 
       - name: Run dashboard pipeline
-        run: node index.js
+        run: npm run start

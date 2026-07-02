@@ -2,6 +2,11 @@ const fs = require("fs");
 const { extractFull } = require("node-7z");
 const pathTo7zip = require("7zip-bin").path7za;
 
+// give executional permissions
+try {
+  fs.chmodSync(pathTo7zip, 0o755);
+} catch {}
+
 async function downloadZip(url) {
   const res = await fetch(url);
 
@@ -25,7 +30,6 @@ function extractZip(zipPath) {
       password: process.env.ZIP_PASSWORD,
     });
 
-    stream.on("data", console.log);
     stream.on("end", () => resolve(outputDir));
     stream.on("error", reject);
   });

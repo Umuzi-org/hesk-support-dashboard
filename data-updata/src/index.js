@@ -20,12 +20,12 @@ async function run() {
   // =====================
   try {
     const zipUrl = await getLatestZipUrl();
-    console.log("ZIP URL:", zipUrl);
+    console.log("✓ Located latest email");
 
     zipPath = await downloadZip(zipUrl);
-    console.log("Downloaded ZIP");
+    console.log("✓ Downloaded ZIP");
   } catch (err) {
-    console.error("❌ Download stage failed:", err);
+    console.error("✕ Download stage failed:", err);
     return;
   }
 
@@ -34,10 +34,9 @@ async function run() {
   // =====================
   try {
     extractDir = await extractZip(zipPath);
-    console.log("Extracted:", extractDir);
-    console.log("Files:", fs.readdirSync(extractDir));
+    console.log("✓ Extracted SQL");
   } catch (err) {
-    console.error("❌ Extract stage failed:", err);
+    console.error("✕ Extract stage failed:", err);
     return;
   }
 
@@ -58,9 +57,9 @@ async function run() {
     sqlPath = path.join(extractDir, sqlFile);
 
     await importDump(sqlPath);
-    console.log("DB imported");
+    console.log("✓ Imported database");
   } catch (err) {
-    console.error("❌ Import stage failed:", err);
+    console.error("✕ Import stage failed:", err);
     return;
   }
 
@@ -73,7 +72,7 @@ async function run() {
     ({ ticketsReport, replyRatingsReport, agentCsatReport } =
       await runReports());
   } catch (err) {
-    console.error("❌ Reports stage failed:", err);
+    console.error("✕ Reports stage failed:", err);
     return;
   }
 
@@ -86,22 +85,23 @@ async function run() {
       Object.keys(ticketsReport[0]),
       ticketsReport.map(Object.values),
     );
+    console.log("✓ Updated RAW_DATA sheet");
 
     await updateSheet(
       "reply_ratings!A2:Z",
       Object.keys(replyRatingsReport[0]),
       replyRatingsReport.map(Object.values),
     );
+    console.log("✓ Updated reply_ratings sheet");
 
     await updateSheet(
       "agent_csat!A1:Z",
       Object.keys(agentCsatReport[0]),
       agentCsatReport.map(Object.values),
     );
-
-    console.log("Sheets updated");
+    console.log("✓ Updated agent_csat sheet");
   } catch (err) {
-    console.error("❌ Sheets stage failed:", err);
+    console.error("✕ Sheets stage failed:", err);
     return;
   }
 
@@ -111,8 +111,9 @@ async function run() {
   try {
     fs.rmSync("./extract", { recursive: true, force: true });
     fs.rmSync("./temp.zip", { force: true });
+    console.log("✓ Cleanup complete");
   } catch (err) {
-    console.error("⚠️ Cleanup warning:", err);
+    console.error("✕ Cleanup failed:", err);
   }
 
   console.log("***DONE***");

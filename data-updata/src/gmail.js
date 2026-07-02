@@ -18,7 +18,7 @@ function extractZipUrl(text) {
 
 async function getLatestZipUrl() {
   const gmail = gmailClient;
-
+  
   const res = await gmail.users.messages.list({
     userId: "me",
     q: `from:${process.env.GMAIL_SENDER}`,
