@@ -43,7 +43,7 @@ jobs:
 
       SHEET_ID: ${{ secrets.SHEET_ID }}
 
-      EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+      GMAIL_SENDER: ${{ secrets.GMAIL_SENDER }}
 
     steps:
       - name: Checkout repository
