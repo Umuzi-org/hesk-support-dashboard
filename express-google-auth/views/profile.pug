@@ -1,0 +1,17 @@
+html
+  head
+    title Profile
+
+  body
+    h1 Profile
+
+    img(
+      src=user.photos[0].value
+      width="120"
+    )
+
+    h2 #{user.displayName}
+
+    p #{user.emails[0].value}
+
+    a(href="/logout") Logout

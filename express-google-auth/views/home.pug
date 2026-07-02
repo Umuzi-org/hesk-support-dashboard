@@ -1,0 +1,14 @@
+html
+  head
+    title Home
+
+  body
+    h1 Express Google OAuth
+
+    if user
+      p Logged in as #{user.displayName}
+      a(href="/profile") Profile
+      br
+      a(href="/logout") Logout
+    else
+      a(href="/auth/google") Login with Google
