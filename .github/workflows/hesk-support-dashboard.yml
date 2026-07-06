@@ -1,4 +1,4 @@
-name: HESK Dashboard
+name: HESK Support Dashboard
 
 on:
   workflow_dispatch:
@@ -87,5 +87,5 @@ jobs:
             -p${{ secrets.MYSQL_PASSWORD }} \
             -e "SHOW DATABASES;"
 
-      - name: Run dashboard pipeline
+      - name: Run support dashboard pipeline
         run: npm run start
