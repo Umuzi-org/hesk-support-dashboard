@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./data-updata
+        working-directory: ./data-updater
 
     services:
       mysql:
@@ -57,7 +57,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: data-updata/package-lock.json
+          cache-dependency-path: data-updater/package-lock.json
 
       - name: Install MySQL client
         run: |
